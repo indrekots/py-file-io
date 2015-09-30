@@ -1,23 +1,34 @@
 import sys
+import csv
 from collections import Counter
 
+csv_rows = []
+
 def main():
-    csv_rows = []
     file_names = sys.argv[1:]
     for name in file_names:
         try:
-            with open(name, 'r') as f:
-                append_row(name, f, csv_rows)
+            process_file(name)
         except FileNotFoundError:
             print("%s does not exist" % name)
 
-    print(csv_rows)
+    write_csv()
+
+def process_file(name):
+    with open(name, 'r') as f:
+        append_row(name, f)
 
 def unique_words(text):
     return len(Counter(text))
 
-def append_row(filename, file, rows):
-    rows.append({"name": filename, "unique_words": unique_words(file.read())})
+def append_row(filename, file):
+    csv_rows.append({"file_name": filename, "unique_words": unique_words(file.read())})
+
+def write_csv():
+    with open('output1.csv', 'w') as f:
+        field_names = ["file_name", "unique_words"]
+        writer = csv.DictWriter(f, field_names)
+        writer.writerows(csv_rows)
 
 if __name__ == "__main__":
     main()
