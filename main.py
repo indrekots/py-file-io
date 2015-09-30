@@ -1,5 +1,4 @@
-import sys
-import csv
+import sys, csv, string
 from collections import Counter
 
 csv_rows = []
@@ -19,6 +18,9 @@ def process_file(name):
         append_row(name, f)
 
 def unique_words(text):
+    text = text.lower()
+    for c in string.punctuation:
+        text = text.replace(c, "")
     return len(Counter(text))
 
 def append_row(filename, file):
